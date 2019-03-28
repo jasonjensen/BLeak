@@ -62,12 +62,12 @@ function prettyPrintNonDOMPath(): void {
         // Seek forward to figure out which, and print appropriately
         // $$listeners.type[index].listener
         const typeSegment = PS.pop();
-        if (!PS.nonempty()) {
+        if (!PS.nonempty() && typeSegment !== null) {
           // List leak
           PS.pushString();
           PS.print(`List of '${typeSegment.indexOrName}' listeners on`);
           PS.pushString();
-        } else {
+        } else if (typeSegment !== null) {
           const indexSegment = PS.pop();
           PS.pop(); // Should be the '.listener' property, unless the application mucked with our metadata.
           PS.pushString();

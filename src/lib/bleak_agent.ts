@@ -473,7 +473,7 @@ declare function importScripts(s: string): void;
    * @param a
    */
   function getProxyStatus(a: any): ProxyStatus {
-    if (isProxyable(a) && a.hasOwnProperty("$$$PROXY$$$")) {
+    if (isProxyable(a) && Object.prototype.hasOwnProperty.call(a, "$$$PROXY$$$")) {
       if (a.$$$PROXY$$$ === a) {
         return ProxyStatus.IS_PROXY;
       } else {
@@ -608,7 +608,7 @@ declare function importScripts(s: string): void;
     if (!isProxyable(obj)) {
       // logToConsole(`[PROXY ERROR]: Cannot create proxy for ${obj} at ${accessStr}.`);
       return obj;
-    } else if (!obj.hasOwnProperty("$$$PROXY$$$")) {
+    } else if (!Object.prototype.hasOwnProperty.call(obj, "$$$PROXY$$$")) {
       const map = new Map<string | number | symbol, Set<string>>();
       if (stackTrace !== null) {
         _initializeMap(obj, map, stackTrace);
@@ -691,7 +691,7 @@ declare function importScripts(s: string): void;
 
   function setHiddenValue(thisObj: any, n: string | number, value: any): void {
     const propName = hiddenPropertyName(n);
-    if (!thisObj.hasOwnProperty(propName)) {
+    if (!Object.prototype.hasOwnProperty.call(thisObj, propName)) {
       Object.defineProperty(thisObj, propName, {
         value: null,
         writable: true
@@ -900,6 +900,7 @@ declare function importScripts(s: string): void;
     path: IPathTree,
     stacksMap: { [id: number]: Set<string> }
   ): void {
+    if (path === null) return;
     const obj = root[path.indexOrName];
     if (isProxyable(obj)) {
       if (path.isGrowing && getProxyStatus(obj) === ProxyStatus.IS_PROXY) {
@@ -1393,6 +1394,7 @@ declare function importScripts(s: string): void;
       }
     }
 
+    // const ApplicationCache:any = {};
     if (IS_WINDOW) {
       [
         Document.prototype,
@@ -1402,7 +1404,7 @@ declare function importScripts(s: string): void;
         HTMLBodyElement.prototype,
         HTMLElement.prototype,
         HTMLFrameSetElement.prototype,
-        ApplicationCache.prototype, //EventSource.prototype, SVGAnimationElement.prototype,
+        // ApplicationCache.prototype, //EventSource.prototype, SVGAnimationElement.prototype,
         SVGElement.prototype,
         XMLHttpRequest.prototype, //XMLHttpRequestEventTarget.prototype,
         WebSocket.prototype,
